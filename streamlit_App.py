@@ -9,7 +9,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 import os
-
+from langchain_community.llms.huggingface_endpoint import HuggingFaceEndpoint
 st.set_page_config(page_title="Document Genie", layout="wide")
 
 st.markdown("""
@@ -60,7 +60,11 @@ def get_conversational_chain():
 
     Answer:
     """
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3, google_api_key=api_key)
+    model = HuggingFaceEndpoint(
+          repo_id=repo_id,
+          max_length=128,
+          temperature=0.5,
+          huggingfacehub_api_token= "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")
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     return chain
